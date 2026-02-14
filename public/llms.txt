@@ -1,0 +1,65 @@
+# Metal Mania — Generative Engine Optimization Map
+
+> A music and entertainment business.
+
+---
+
+## Pages
+
+### Home
+https://metal-mania-5c1670db.zappy5.app
+
+### News
+https://metal-mania-5c1670db.zappy5.app/news
+
+### Tours
+https://metal-mania-5c1670db.zappy5.app/tours
+
+### Contact
+https://metal-mania-5c1670db.zappy5.app/contact
+
+### Products
+https://metal-mania-5c1670db.zappy5.app/products
+Our Products - Metal Mania
+
+### Product Detail
+https://metal-mania-5c1670db.zappy5.app/product/:slug
+Product Details - Metal Mania
+
+### Category
+https://metal-mania-5c1670db.zappy5.app/category/:slug
+Products - Metal Mania
+
+## Legal & Policy
+
+### Privacy Policy
+https://metal-mania-5c1670db.zappy5.app/privacy
+Information about how user data is collected, stored, and protected.
+
+### Terms & Conditions
+https://metal-mania-5c1670db.zappy5.app/terms
+Legal terms describing service usage, rights, and policies.
+
+### Accessibility Statement
+https://metal-mania-5c1670db.zappy5.app/accessibility
+Information about WCAG compliance and accessibility features.
+
+---
+
+# Business Context (for LLM understanding)
+
+## About Metal Mania
+Metal Mania is a business in the music and entertainment industry.
+
+## Target Audience
+heavy metal and heavy rock music fans
+
+## Industry
+music and entertainment
+
+---
+
+# Additional Resources
+
+- **Sitemap**: https://metal-mania-5c1670db.zappy5.app/sitemap.xml
+- **Robots.txt**: https://metal-mania-5c1670db.zappy5.app/robots.txt

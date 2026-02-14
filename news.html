@@ -1,0 +1,647 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-zappy-site-type="ecommerce"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News - Metal Mania</title>
+  <meta name="description" content="News - Metal Mania provides professional music and entertainment services. Specializing in mobile tracker free.">
+  <meta name="keywords" content="mobile tracker free, apple find my iphone, fl studio mobile, android apps">
+  <meta name="robots" content="index, follow">
+  
+  <meta property="og:title" content="News - Metal Mania">
+  <meta property="og:description" content="News - Metal Mania provides professional music and entertainment services. Specializing in mobile tracker free.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="News - Metal Mania">
+  <meta name="twitter:description" content="News - Metal Mania provides professional music and entertainment services. Specializing in mobile tracker free.">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+<!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: '5c1670db-591b-44de-9178-c7463667623c',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: #333 !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))), .sub-menu:not(:has(li)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .sub-menu.mobile-expanded { max-height: 500px !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: 44px !important; background: transparent !important; border: none !important; cursor: pointer !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-search-panel" id="mobile-search-panel">
+      <div class="search-wrapper">
+        <input type="text" id="mobile-search-input" placeholder="Search products..." autocomplete="off">
+        <button class="search-submit" id="mobile-search-submit" title="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </button>
+        <button class="close-search" id="close-mobile-search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="search-results" id="mobile-search-results"></div>
+    </div>
+  
+<script>window.ZAPPY_WEBSITE_ID = "5c1670db-591b-44de-9178-c7463667623c";window.ZAPPY_API_BASE = (window.location.pathname.includes('/preview') ? "https://api.zappy5.com" : "https://api.zappy5.com");</script>
+  <nav class="navbar">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+  
+  <button class="phone-header-btn" aria-label="Call">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+  
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a href="/" class="logo-link">
+        <img src="/assets/business-logo.webp" alt="Metal Mania" class="logo" />
+      </a>
+    </div>
+    
+    <ul class="nav-menu" id="navMenu">
+
+    <li class="menu-item-has-children zappy-products-dropdown">
+      <a href="/products">
+        Products
+        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6"></path>
+        </svg>
+      </a>
+      <ul class="sub-menu" id="zappy-nav-category-links">
+        <li><a href="/products">All Products</a></li>
+        <!-- Categories will be loaded dynamically -->
+      </ul>
+    </li>
+  <li><a href="/news">News</a></li><li><a href="/tours">Tours</a></li><li><a href="/contact">Contact</a></li></ul><div class="nav-ecommerce-icons nav-icons-left"><div class="nav-search-box">
+    <input type="text" class="nav-search-input" id="nav-search-input" placeholder="Search products..." autocomplete="off">
+    <button class="nav-search-btn" id="nav-search-btn" title="Search">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    </button>
+    <div class="nav-search-results" id="nav-search-results"></div>
+  </div></div><div class="nav-ecommerce-icons nav-icons-right"><button class="nav-search-toggle" id="mobile-search-toggle" title="Search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button></div>
+    
+    
+  </div>
+</nav>
+
+    <nav class="zappy-catalog-menu ltr" id="zappy-catalog-menu" dir="ltr">
+      <div class="catalog-menu-container">
+        <a href="/products" class="catalog-menu-item catalog-menu-all">All Products</a>
+        <div class="catalog-menu-categories" id="zappy-category-links">
+          <!-- Categories will be loaded dynamically -->
+        </div>
+      </div>
+    </nav>
+  
+  
+  <main>
+    <section class="news-intro-section" data-layout-spec="News-intro">
+  <div class="news-intro-container">
+    <div class="news-intro-content">
+      <div class="news-intro-text">
+        <h1>News</h1>
+        <p>Stay plugged in with the latest from the metal universe—breaking album announcements, tour dates, exclusive interviews, and everything that keeps the scene alive and roaring.</p>
+      </div>
+      <div class="news-intro-image-wrapper">
+        <div class="news-intro-image-card">
+          <img data-placeholder="news-intro-portrait" data-context="Dramatic portrait-orientation concert photograph of a heavy metal guitarist on stage with intense stage lighting, smoke effects, and dramatic shadows. The musician is silhouetted against bright backlighting creating a powerful cinematic mood. Shot from a low angle to emphasize the energy and power of live metal performance. High contrast black and white or monochrome color grading with cyan and magenta accent lighting typical of metal concerts." width="400" height="600" src="/assets/site-news-intro-portrait.webp" alt="Metal concert performer in dramatic stage lighting">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="news-intro-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 2" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="news-intro-pulse-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:rgba(255,255,255,0.14);stop-opacity:1"></stop>
+          <stop offset="70%" style="stop-color:rgba(255,255,255,0.14);stop-opacity:1"></stop>
+          <stop offset="75%" style="stop-color:#00D4FF;stop-opacity:1"></stop>
+          <stop offset="85%" style="stop-color:#00D4FF;stop-opacity:1"></stop>
+          <stop offset="90%" style="stop-color:rgba(255,255,255,0.14);stop-opacity:1"></stop>
+          <stop offset="100%" style="stop-color:rgba(255,255,255,0.14);stop-opacity:1"></stop>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="1200" height="1" fill="url(#news-intro-pulse-gradient)"></rect>
+      <rect x="0" y="1" width="1200" height="1" fill="rgba(0,0,0,0.55)"></rect>
+    </svg>
+  </div>
+</section>
+
+<section class="news-news-section" data-layout-spec="News-news">
+  <div class="news-news-container">
+    <div class="news-news-intro">
+      <div class="news-news-vertical-rule" aria-hidden="true"></div>
+      <div class="news-news-intro-content">
+        <h2>Latest News</h2>
+        <p>Stay updated with the latest releases, tour announcements, interviews, and exclusive video drops from the metal world.</p>
+      </div>
+    </div>
+    
+    <div class="news-news-grid">
+      <article class="news-news-card">
+        <div class="news-news-card-image">
+          <img data-placeholder="news-news-image-1" data-context="Heavy metal band performing live on stage with dramatic lighting, fog effects, and crowd headbanging - concert photography style for music news" width="600" height="400" src="/assets/site-news-news-image-1.webp" alt="Metal band live performance">
+        </div>
+        <div class="news-news-card-content">
+          <h3>New Album Drop: Shadows of Steel</h3>
+          <p>The legendary thrash metal titans unleash their most brutal record yet, featuring guest appearances and crushing riffs that redefine the genre.</p>
+        </div>
+      </article>
+
+      <article class="news-news-card">
+        <div class="news-news-card-image">
+          <img data-placeholder="news-news-image-2" data-context="Metal guitarist close-up with electric guitar and amplifiers in studio - professional music photography for artist interview feature" width="600" height="400" src="/assets/site-news-news-image-2.webp" alt="Guitarist in studio">
+        </div>
+        <div class="news-news-card-content">
+          <h3>Exclusive Interview: The Future of Metal</h3>
+          <p>We sit down with one of metal's most influential guitarists to discuss their creative process, upcoming projects, and the evolution of heavy music.</p>
+        </div>
+      </article>
+
+      <article class="news-news-card">
+        <div class="news-news-card-image">
+          <img data-placeholder="news-news-image-3" data-context="Metal festival crowd from stage perspective with hands raised and pyrotechnics - epic concert moment for tour announcement" width="600" height="400" src="/assets/site-news-news-image-3.webp" alt="Festival crowd at metal concert">
+        </div>
+        <div class="news-news-card-content">
+          <h3>World Tour Announced: 50 Cities</h3>
+          <p>Metal's biggest names unite for an unprecedented global tour bringing devastating live performances to fans across five continents this summer.</p>
+        </div>
+      </article>
+
+      <article class="news-news-card">
+        <div class="news-news-card-image">
+          <img data-placeholder="news-news-image-4" data-context="Music video production behind the scenes with band members and film crew - cinematic metal video shoot for news feature" width="600" height="400" src="/assets/site-news-news-image-4.webp" alt="Music video production">
+        </div>
+        <div class="news-news-card-content">
+          <h3>Video Premiere: Infernal Descent</h3>
+          <p>Watch the mind-bending new video featuring cutting-edge visual effects, apocalyptic imagery, and the band's signature aggressive performance style.</p>
+        </div>
+      </article>
+
+      <article class="news-news-card">
+        <div class="news-news-card-image">
+          <img data-placeholder="news-news-image-5" data-context="Metal drummer performing with double bass drums and cymbals in dramatic stage lighting - action shot for music news article" width="600" height="400" src="/assets/site-news-news-image-5.webp" alt="Drummer performing live">
+        </div>
+        <div class="news-news-card-content">
+          <h3>Rising Stars: Underground Breakthrough</h3>
+          <p>Discover the underground bands making waves with their innovative sound, raw energy, and dedication to keeping the true spirit of metal alive.</p>
+        </div>
+      </article>
+
+      <article class="news-news-card">
+        <div class="news-news-card-image">
+          <img data-placeholder="news-news-image-6" data-context="Metal band group photo in industrial warehouse setting with leather jackets and instruments - promotional band photography" width="600" height="400" src="/assets/site-news-news-image-6.webp" alt="Metal band promotional photo">
+        </div>
+        <div class="news-news-card-content">
+          <h3>Reunion Confirmed: Legends Return</h3>
+          <p>After a decade apart, iconic metal pioneers announce their reunion with plans for new material and select festival appearances worldwide.</p>
+        </div>
+      </article>
+
+      <article class="news-news-card">
+        <div class="news-news-card-image">
+          <img data-placeholder="news-news-image-7" data-context="Metal music recording studio with mixing console and monitors - professional audio production environment for album news" width="600" height="400" src="/assets/site-news-news-image-7.webp" alt="Recording studio setup">
+        </div>
+        <div class="news-news-card-content">
+          <h3>Studio Report: Next-Gen Production</h3>
+          <p>Go inside the recording process as bands embrace new technology while maintaining the raw power and authenticity that defines heavy metal sound.</p>
+        </div>
+      </article>
+
+      <article class="news-news-card">
+        <div class="news-news-card-image">
+          <img data-placeholder="news-news-image-8" data-context="Metal bassist performing on stage with fog and blue lighting effects - concert photography for live performance news" width="600" height="400" src="/assets/site-news-news-image-8.webp" alt="Bassist live performance">
+        </div>
+        <div class="news-news-card-content">
+          <h3>Festival Lineup Revealed: Epic Roster</h3>
+          <p>The year's most anticipated metal festival announces its complete lineup featuring headliners, rising acts, and surprise special guests.</p>
+        </div>
+      </article>
+
+      <article class="news-news-card">
+        <div class="news-news-card-image">
+          <img data-placeholder="news-news-image-9" data-context="Metal vocalist singing intensely with microphone and dramatic red lighting - powerful stage presence for music news feature" width="600" height="400" src="/assets/site-news-news-image-9.webp" alt="Vocalist performing with intensity">
+        </div>
+        <div class="news-news-card-content">
+          <h3>Award Winners: Metal's Finest Honored</h3>
+          <p>Celebrating excellence in heavy music as this year's awards recognize outstanding albums, performances, and contributions to the metal community.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+  
+  <div class="news-news-marquee-divider" aria-hidden="true" data-no-icon-edit="true"></div>
+</section>
+
+<section class="news-spotlight-section" data-layout-spec="News-spotlight">
+  <div class="news-spotlight-container">
+    <div class="news-spotlight-content">
+      <h2 class="news-spotlight-title">The Future of Metal: New Wave Rising</h2>
+      <p class="news-spotlight-summary">A seismic shift is happening in the metal scene as emerging bands blend traditional heavy metal roots with modern production techniques, creating a sound that's both nostalgic and revolutionary. This movement is redefining what it means to be a metal fan in the digital age.</p>
+      
+      <div class="news-spotlight-subtopics">
+        <div class="news-spotlight-subtopic">
+          <h3 class="news-spotlight-subtitle">Why It Matters</h3>
+          <p class="news-spotlight-subtext">The new generation is bridging the gap between classic metal purists and younger audiences, proving that heavy music can evolve without losing its soul. This fusion is attracting unprecedented streaming numbers and sold-out venues worldwide.</p>
+        </div>
+        
+        <div class="news-spotlight-subtopic">
+          <h3 class="news-spotlight-subtitle">What's Next</h3>
+          <p class="news-spotlight-subtext">Industry experts predict a renaissance period for metal, with major festivals expanding lineups and record labels actively scouting underground talent. The momentum suggests this isn't a trend—it's a transformation.</p>
+        </div>
+        
+        <div class="news-spotlight-subtopic">
+          <h3 class="news-spotlight-subtitle">Where to Watch</h3>
+          <p class="news-spotlight-subtext">Keep your eyes on emerging scenes in Berlin, São Paulo, and Melbourne. These cities are becoming hotbeds for innovation, hosting underground shows that are shaping the future of heavy music culture.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="news-spotlight-image-column">
+      <div class="news-spotlight-image-wrapper">
+        <img data-placeholder="news-spotlight-image-1" data-context="Cinematic wide-angle shot of a heavy metal concert stage with dramatic lighting, intense stage fog, silhouettes of band members performing, crowd headbanging in foreground, neon cyan and magenta stage lights cutting through darkness, professional music photography, high energy atmosphere, backstage pass aesthetic" width="700" height="500" src="/assets/site-news-spotlight-image-1.webp" alt="Metal concert stage with dramatic lighting and crowd">
+        <div class="news-spotlight-image-overlay"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="news-spotlight-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,80 L0,20 Q150,15 300,22 Q450,28 600,10 Q750,28 900,22 Q1050,15 1200,20 L1200,80 Z" fill="var(--bg-dark)"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="news-reviews-section" data-layout-spec="News-reviews">
+  <div class="news-reviews-container">
+    <div class="news-reviews-header">
+      <h2>What People Are Saying</h2>
+      <p>Our community and press reactions keep the energy alive—here's what the crowd is roaring about.</p>
+    </div>
+    <div class="news-reviews-grid">
+      <div class="news-reviews-quote-card">
+        <div class="news-reviews-accent-line"></div>
+        <p class="news-reviews-quote">"Metal Mania delivers the most electrifying live experience I've ever witnessed. The energy is absolutely unmatched."</p>
+        <p class="news-reviews-attribution">— Sarah Mitchell, Rock Magazine</p>
+      </div>
+      <div class="news-reviews-quote-card">
+        <div class="news-reviews-accent-line"></div>
+        <p class="news-reviews-quote">"From the first riff to the final encore, Metal Mania proves why they're the kings of the underground scene."</p>
+        <p class="news-reviews-attribution">— David Chen, Metal Underground</p>
+      </div>
+      <div class="news-reviews-quote-card">
+        <div class="news-reviews-accent-line"></div>
+        <p class="news-reviews-quote">"A visceral, raw performance that captures everything great about heavy metal. This is what real music sounds like."</p>
+        <p class="news-reviews-attribution">— Jessica Torres, The Heavy Beat</p>
+      </div>
+      <div class="news-reviews-quote-card">
+        <div class="news-reviews-accent-line"></div>
+        <p class="news-reviews-quote">"Metal Mania doesn't just play music—they create an atmosphere that pulls you into their world completely."</p>
+        <p class="news-reviews-attribution">— Marcus Reid, Amplified Voice</p>
+      </div>
+    </div>
+  </div>
+  <div class="news-reviews-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="news-reviews-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:var(--bg-dark);stop-"></stop>
+          <stop offset="100%" style="stop-color:#0A0C10;stop-opacity:1"></stop>
+        </linearGradient>
+      </defs>
+      <path d="M0,120 L0,0 L1200,0 L1200,120 Z" fill="url(#news-reviews-gradient)"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="news-cta-section" data-layout-spec="News-cta">
+  <div class="news-cta-container">
+    <div class="news-cta-content">
+      <h2 class="news-cta-title">Have a Tip or Announcement?</h2>
+      <p class="news-cta-description">Got breaking news from the metal scene? Want to share an upcoming show or album drop? We're always looking for fresh stories from the community. Reach out and let us know what's happening in your corner of the metal world.</p>
+      <a href="/contact" class="news-cta-button">Contact Us</a>
+    </div>
+  </div>
+</section>
+  </main>
+  
+  <footer class="site-footer"><div class="footer-container"><div class="footer-grid"><div class="footer-column footer-brand"><img src="/assets/business-logo.webp" alt="Metal Mania" class="logo" /><p class="footer-tagline">Your ultimate destination for metal music, tours, and entertainment.</p></div><div class="footer-column"><h3 class="footer-heading">Quick Links</h3><ul class="footer-links"><li><a href="/news">News</a></li><li><a href="/tours">Tours</a></li><li><a href="/contact">Contact</a></li></ul></div><div class="footer-column"><h3 class="footer-heading">Contact Us</h3><ul class="footer-contact"><li><i class="fas fa-envelope"></i><a href="mailto:[business_email]">[business_email]</a></li><li><i class="fas fa-phone"></i><a href="tel:[business_phone]">[business_phone]</a></li><li><a href="/"><i class="fas fa-map-marker-alt"></i><span>[business_address]</span></a></li></ul></div><div class="footer-column"><h3 class="footer-heading">Follow Us</h3><div class="social-links"><a href="[facebook_handle]" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a><a href="[instagram_handle]" aria-label="Instagram"><i class="fab fa-instagram"></i></a><a href="[whatsapp_handle]" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a></div></div></div><div class="footer-bottom"><div class="footer-legal"><a href="/privacy">Privacy Policy</a><span class="separator">|</span><a href="/terms">Terms &amp; Conditions</a><span class="separator">|</span>
+            <a href="/return-policy" aria-label="Return Policy">
+              Return Policy
+            </a><span class="separator">|</span><a href="/accessibility">Accessibility</a></div><p class="footer-copyright">© 2026 Metal Mania. All rights reserved.</p><a href="https://zappy5.com" target="_blank" class="zappy-attribution">Generated by Zappy</a></div></div></footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <script src="/script.js"></script>
+
+    <div data-integration="accessibility:toolbar"></div>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+</body></html>

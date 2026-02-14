@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://metal-mania-5c1670db.zappy5.app/sitemap.xml
